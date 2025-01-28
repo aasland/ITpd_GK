@@ -15,6 +15,11 @@ class Player(pygame.sprite.Sprite):
         self.width = TILESIZE
         self.height = TILESIZE
 
+        self.x_change = 0
+        self.y_change = 0
+
+        self.facing = "down"
+
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill(RED)
 
