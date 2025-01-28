@@ -48,7 +48,20 @@ class Game:
         pass
     def intro_screen(self): 
         pass
-
+    def movement(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.x_change -= PLAYER_SPEED
+            self.facing = "left"
+        if keys[pygame.K_RIGHT]:
+            self.x_change += PLAYER_SPEED
+            self.facing = "right"
+        if keys[pygame.K_UP]:
+            self.y_change -= PLAYER_SPEED
+            self.facing = "up"
+        if keys[pygame.K_DOWN]:
+            self.y_change += PLAYER_SPEED
+            self.facing = "down"
 
 spill = Game()
 spill.intro_screen()
