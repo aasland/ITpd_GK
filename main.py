@@ -8,7 +8,6 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.Font("Arial", 20)
         self.running = True
 
     def new(self):
@@ -29,8 +28,13 @@ class Game:
 
     
     def update(self):
+        self.all_sprites.update()
 
     def draw(self):
+        self.screen.fill(BLACK)
+        self.all_sprites.draw(self.screen)
+        self.clock.tick(FPS)
+        pygame.display.update()
 
     def main(self):
 
@@ -41,5 +45,16 @@ class Game:
         self.running = False
     
     def game_over(self):
-    
-    def intro_screen(self):
+        pass
+    def intro_screen(self): 
+        pass
+
+
+spill = Game()
+spill.intro_screen()
+spill.new()
+while spill.running:
+    spill.main()
+
+pygame.quit()
+sys.exit()
