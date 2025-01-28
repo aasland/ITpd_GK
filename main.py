@@ -29,6 +29,13 @@ class Game:
     
     def update(self):
         self.all_sprites.update()
+        self.movement()
+        self.rect.x += self.x_change
+        self.rect.y += self.y_change
+
+        self.x_change = 0
+        self.y_change = 0
+
 
     def draw(self):
         self.screen.fill(BLACK)
