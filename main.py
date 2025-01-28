@@ -26,17 +26,6 @@ class Game:
                 self.playing = False
                 self.running = False
 
-    
-    def update(self):
-        self.all_sprites.update()
-        self.movement()
-        self.rect.x += self.x_change
-        self.rect.y += self.y_change
-
-        self.x_change = 0
-        self.y_change = 0
-
-
     def draw(self):
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
@@ -55,20 +44,9 @@ class Game:
         pass
     def intro_screen(self): 
         pass
-    def movement(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.x_change -= PLAYER_SPEED
-            self.facing = "left"
-        if keys[pygame.K_RIGHT]:
-            self.x_change += PLAYER_SPEED
-            self.facing = "right"
-        if keys[pygame.K_UP]:
-            self.y_change -= PLAYER_SPEED
-            self.facing = "up"
-        if keys[pygame.K_DOWN]:
-            self.y_change += PLAYER_SPEED
-            self.facing = "down"
+
+    def update(self):
+        self.all_sprites.update()
 
 spill = Game()
 spill.intro_screen()
