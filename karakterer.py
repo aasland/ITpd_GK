@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
 
         self.facing = "down"
 
-        image_to_load = pygame.image.load("IMG/MAIN.png")
+        image_to_load = pygame.image.load("img/face.png")
         self.image = pygame.Surface([self.width, self.height])
         self.image.set_colorkey(BLACK)
         self.image.blit(image_to_load, (0,0))
