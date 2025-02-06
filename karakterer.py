@@ -20,14 +20,13 @@ class Player(pygame.sprite.Sprite):
 
         self.facing = "down"
 
-        image_to_load = pygame.image.load("img/face.png")
-        self.image = pygame.Surface([self.width, self.height])
-        self.image.set_colorkey(BLACK)
-        self.image.blit(image_to_load, (0,0))
+        self.image = pygame.image.load("img/face.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (TILESIZE, TILESIZE))
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
+
     
     def update(self):
         self.movement()
