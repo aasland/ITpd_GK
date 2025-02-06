@@ -3,6 +3,17 @@ from Variabler import *
 import math as math
 import random as random
 
+class Spritesheet:
+    def __init__(self, file):
+        self.sheet = pygame.image.load(file).convert()
+
+    def get_sprite(self, x, y, width, height):
+        sprite = pygame.Surface([width, height])
+        sprite.blit(self.sheet, (0, 0), (x, y, width, height))
+        sprite.set_colorkey(BLACK)
+        return sprite
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
@@ -64,11 +75,10 @@ class Block(pygame.sprite.Sprite):
         self.width = TILESIZE
         self.height = TILESIZE
 
-        self.image = pygame.Surface([self.width, self.height])
-        self.image.fill(BLUE)
+        self.image = self.game.terrain_spritesheet.get_sprite(32, 32, self.height, self.width)
+        
 
         self.rect = self.image.get_rect()
-        self.image.fill(BLUE)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
