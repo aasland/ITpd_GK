@@ -10,6 +10,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
+        self.character_spritesheet = Spritesheet("img/characters.png")
         self.terrain_spritesheet = Spritesheet("img/terrain.png")
 
 
