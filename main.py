@@ -10,6 +10,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
+        self.terrain_spritesheet = Spritesheet("img/terrain.png")
+
+
     def createTilemap(self):
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
