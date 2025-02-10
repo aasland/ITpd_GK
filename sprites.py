@@ -82,21 +82,29 @@ class Player(pygame.sprite.Sprite):
             self.game.playing = False
 
     def collide_blocks(self,direction):
-        if direction == "x":
+        if direction == 'x':
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
             if hits:
                 if self.x_change > 0:
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.x += PLAYER_SPEED
                     self.rect.x = hits[0].rect.left - self.rect.width
                 if self.x_change < 0:
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.x -= PLAYER_SPEED
                     self.rect.x = hits[0].rect.right
-        if direction == "y":
+
+        if direction == 'y':
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
             if hits:
-                if self.y_change>0:
+                if self.y_change > 0:
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.y += PLAYER_SPEED
                     self.rect.y = hits[0].rect.top - self.rect.height
                 if self.y_change < 0:
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.y -= PLAYER_SPEED
                     self.rect.y = hits[0].rect.bottom
-
     def animate(self):
         down_animations = [self.game.character_spritesheet.get_sprite(0, 0, self.width, self.height),
                            self.game.character_spritesheet.get_sprite(32, 0, self.width, self.height),
@@ -291,16 +299,16 @@ class Button:
         self.fg = fg
         self.bg = bg
 
-        self.image = pygame.surface((self.width, self.height))
+        self.image = pygame.Surface((self.width, self.height))
         self.image.fill(self.bg)
         self.rect = self.image.get_rect()
 
         self.rect.x =self.x
         self.rect.y =self.y
-        
+
         self.text = self.font.render(self.content, True, self.fg)
         self.text_rect = self.text.get_rect(center=(self.width/2, self.height/2))
-        self.image.blir(self.text, self.text_rect)
+        self.image.blit(self.text, self.text_rect)
 
 
     def is_pressed(self, pos, pressed):
