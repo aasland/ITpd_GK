@@ -1,5 +1,5 @@
 import pygame
-from karakterer import *
+from sprites import *
 from Variabler import *
 import sys
 
@@ -10,9 +10,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
+        self.character_spritesheet = Spritesheet("img/characters.png")
+        self.terrain_spritesheet = Spritesheet("img/terrain.png")
+
+
     def createTilemap(self):
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
+                Ground(self,j,i)
                 if column == "B":
                     Block(self,j,i)
                 if column == "P":
