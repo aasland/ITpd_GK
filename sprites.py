@@ -49,6 +49,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.y_change
         self.collide_blocks("y")
 
+        # Sjekk kollisjon med fiender
+        if pygame.sprite.spritecollide(self, self.game.enemies, False):
+            self.game.game_over()  # Kaller game over-funksjonen når spilleren kolliderer med en fiende
+
+
         self.x_change = 0
         self.y_change = 0
     
