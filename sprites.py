@@ -187,7 +187,7 @@ class Enemy(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
 
-        self.facing = random.choice(["left", "right"])
+        self.facing = random.choice(["left", "right", "up", "down"])
         self.animation_loop = 1
         self.movement_loop = 0
         self.max_travel = random.randint(7,30)
@@ -210,6 +210,16 @@ class Enemy(pygame.sprite.Sprite):
                             self.game.enemy_spritesheet.get_sprite(32, 64, self.width, self.height),
                             self.game.enemy_spritesheet.get_sprite(64, 64, self.width, self.height),
                             self.game.enemy_spritesheet.get_sprite(96, 64, self.width, self.height)]
+        
+        self.up_animations = [self.game.enemy_spritesheet.get_sprite(0, 96, self.width, self.height),
+                            self.game.enemy_spritesheet.get_sprite(32, 96, self.width, self.height),
+                            self.game.enemy_spritesheet.get_sprite(64, 96, self.width, self.height),
+                            self.game.enemy_spritesheet.get_sprite(96, 96, self.width, self.height)]
+                            
+        self.down_animations = [self.game.enemy_spritesheet.get_sprite(0, 0, self.width, self.height),
+                              self.game.enemy_spritesheet.get_sprite(32, 0, self.width, self.height),
+                              self.game.enemy_spritesheet.get_sprite(64, 0, self.width, self.height),
+                              self.game.enemy_spritesheet.get_sprite(96, 0, self.width, self.height)]
 
     def update(self):
         self.movement()
@@ -225,14 +235,26 @@ class Enemy(pygame.sprite.Sprite):
             self.x_change -= ENEMY_SPEED
             self.movement_loop -= 1
             if self.movement_loop <= -self.max_travel:
-                self.facing = "right"
+                self.facing = random.choice(["right", "up", "down"])
 
         if self.facing == "right":
             self.x_change += ENEMY_SPEED
             self.movement_loop += 1
             if self.movement_loop >= self.max_travel:
-                self.facing = "left"
-        
+                self.facing = random.choice(["left", "up", "down"])
+
+        if self.facing == "up":
+            self.y_change -= ENEMY_SPEED
+            self.movement_loop -= 1
+            if self.movement_loop <= -self.max_travel:
+                self.facing = random.choice(["down", "left", "right"])
+
+        if self.facing == "down":
+            self.y_change += ENEMY_SPEED
+            self.movement_loop += 1
+            if self.movement_loop >= self.max_travel:
+                self.facing = random.choice(["up", "left", "right"])
+
     def animate(self):
         if self.facing == "left":
             if self.x_change == 0:
@@ -248,6 +270,24 @@ class Enemy(pygame.sprite.Sprite):
                 self.image = self.game.enemy_spritesheet.get_sprite(0, 64, self.width, self.height)
             else:
                 self.image = self.right_animations[math.floor(self.animation_loop)]
+                self.animation_loop += 0.1
+                if self.animation_loop >= 4:
+                    self.animation_loop = 1
+
+        if self.facing == "up":
+            if self.y_change == 0:
+                self.image = self.game.enemy_spritesheet.get_sprite(0, 96, self.width, self.height)
+            else:
+                self.image = self.up_animations[math.floor(self.animation_loop)]
+                self.animation_loop += 0.1
+                if self.animation_loop >= 4:
+                    self.animation_loop = 1
+
+        if self.facing == "down":
+            if self.y_change == 0:
+                self.image = self.game.enemy_spritesheet.get_sprite(0, 0, self.width, self.height)
+            else:
+                self.image = self.down_animations[math.floor(self.animation_loop)]
                 self.animation_loop += 0.1
                 if self.animation_loop >= 4:
                     self.animation_loop = 1

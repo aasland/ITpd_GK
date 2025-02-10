@@ -26,9 +26,9 @@ class Game:
                 if column == "B":
                     Block(self,j,i)
                 if column == "E":
-                    Enemy(self, j, i)
+                    Enemy(self,j,i)
                 if column == "P":
-                    self.player = Player(self, j, i)
+                    self.player = Player(self,j,i)
 
     def new(self):
         self.playing = True
