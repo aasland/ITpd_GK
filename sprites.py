@@ -331,38 +331,78 @@ class Ground(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-class Button:
-    def __init__(self, x, y, width, height, fg, bg, content, fontsize):
-        self.font = pygame.font.Font("Iceberg-Regular.ttf", fontsize)
-        self.content = content
+# class Button:
+#     def __init__(self, x, y, width, height, fg, bg, content, fontsize):
+#         self.font = pygame.font.Font("Iceberg-Regular.ttf", fontsize)
+#         self.content = content
 
-        self.x = x 
-        self.y = y
-        self.width = width 
-        self.height = height 
+#         self.x = x 
+#         self.y = y
+#         self.width = width 
+#         self.height = height 
 
-        self.fg = fg
-        self.bg = bg
+#         self.fg = fg
+#         self.bg = bg
 
-        self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(self.bg)
-        self.rect = self.image.get_rect()
+#         self.image = pygame.Surface((self.width, self.height))
+#         self.image.fill(self.bg)
+#         self.rect = self.image.get_rect()
 
-        self.rect.x =self.x
-        self.rect.y =self.y
+#         self.rect.x =self.x
+#         self.rect.y =self.y
 
-        self.text = self.font.render(self.content, True, self.fg)
-        self.text_rect = self.text.get_rect(center=(self.width/2, self.height/2))
-        self.image.blit(self.text, self.text_rect)
+#         self.text = self.font.render(self.content, True, self.fg)
+#         self.text_rect = self.text.get_rect(center=(self.width/2, self.height/2))
+#         self.image.blit(self.text, self.text_rect)
 
 
-    def is_pressed(self, pos, pressed):
-        if self.rect.collidepoint(pos):
-            if pressed[0]:
-                return True
-            return False
-        return False
+#     def is_pressed(self, pos, pressed):
+#         if self.rect.collidepoint(pos):
+#             if pressed[0]:
+#                 return True
+#             return False
+#         return False
     
+class Button:
+    def __init__(self, x, y, width, height, color, hover_color, text, font_size):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.color = color
+        self.hover_color = hover_color
+        self.text = text
+        self.font = pygame.font.Font("Iceberg-Regular.ttf", font_size)
+        self.text_color = WHITE
+        self.hover_text_color = GRAY  # Fargen når musen er over knappen
+        self.image = pygame.Surface((width, height))
+        self.image.fill(self.color)
+
+        self.update_text(self.text_color)
+
+    def update_text(self, color):
+        """Oppdaterer knappeteksten med riktig farge"""
+        text_surface = self.font.render(self.text, True, color)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        self.image.fill(self.color)  # Tegner bakgrunnsfargen på nytt
+        self.image.blit(text_surface, (self.rect.width // 2 - text_rect.width // 2, 
+                                       self.rect.height // 2 - text_rect.height // 2))
+
+    def is_hovered(self, mouse_pos):
+        """Sjekker om musen er over knappen"""
+        return self.rect.collidepoint(mouse_pos)
+
+    def is_pressed(self, mouse_pos, mouse_pressed):
+        """Sjekker om knappen trykkes"""
+        return self.is_hovered(mouse_pos) and mouse_pressed[0]
+
+    def draw(self, screen, mouse_pos):
+        """Tegner knappen med riktig farge basert på om musen er over"""
+        if self.is_hovered(mouse_pos):
+            self.update_text(self.hover_text_color)
+        else:
+            self.update_text(self.text_color)
+
+        screen.blit(self.image, self.rect.topleft)
+
+
 class Attack(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
 

@@ -71,10 +71,11 @@ class Game:
             self.draw()
     
     def game_over(self):
-        text = self.font.render("Game Over", True, WHITE)
+        text = self.font.render("Game Over", True, BLACK)
         text_rect = text.get_rect(center=(WIN_WIDTH/2, WIN_HEIGHT/2))
 
-        restart_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, "Restart", 32)
+        restart_button = Button(10, WIN_HEIGHT - 60, 120, 50, BLACK, BLACK, "Restart", 32)
+        main_menu_button = Button(265, 350, 100, 50, BLACK, BLACK, "Main Menu", 32)
 
         for sprite in self.all_sprites:
             sprite.kill()
@@ -90,12 +91,18 @@ class Game:
             if restart_button.is_pressed(mouse_pos, mouse_pressed):
                 self.new()
                 self.main()
+                
+            if main_menu_button.is_pressed(mouse_pos, mouse_pressed):
+                self.running = False  # Stopper game-over-løkken
+                return  # Bryter ut av game_over()
 
             self.screen.blit(self.go_background, (0,0))
             self.screen.blit(text, text_rect)
-            self.screen.blit(restart_button.image, restart_button.rect)
+            restart_button.draw(self.screen, mouse_pos)
+            main_menu_button.draw(self.screen, mouse_pos)
             self.clock.tick(FPS)
             pygame.display.update()
+
 
     def intro_screen(self): 
         intro = True
@@ -103,9 +110,9 @@ class Game:
         title = self.font.render("Manic Mansion", True, BLACK)
         title_rect = title.get_rect(x=220, y=100)
 
-        play_button = Button(265, 200, 100, 50, WHITE, BLACK, "Play", 32)
-        tutorial_button = Button(255, 270, 120, 60, WHITE, BLACK, "Tutorial", 32)
-        quit_button = Button(265, 350, 100, 50, WHITE, BLACK, "Quit", 32)
+        play_button = Button(265, 200, 100, 50, BLACK, BLACK, "Play", 32)
+        tutorial_button = Button(255, 270, 120, 60, BLACK, BLACK, "Tutorial", 32)
+        quit_button = Button(265, 350, 100, 50, BLACK, BLACK, "Quit", 32)
 
         while intro:
             for event in pygame.event.get():
@@ -119,30 +126,62 @@ class Game:
             if play_button.is_pressed(mouse_pos, mouse_pressed):
                 intro = False
             if tutorial_button.is_pressed(mouse_pos, mouse_pressed):
-                intro = False
+                self.tutorial_screen()
             if quit_button.is_pressed(mouse_pos, mouse_pressed):
                 intro = False
+                self.running = False
+                pygame.quit()
+                sys.exit()
 
-            self.screen.blit(self.intro_background, (0,0))
+            self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
-            self.screen.blit(play_button.image, play_button.rect)
-            self.screen.blit(tutorial_button.image, tutorial_button.rect)
-            self.screen.blit(quit_button.image, quit_button.rect)
+
+            # Bruk den nye `draw()`-metoden for å tegne knappene med hover-effekt
+            play_button.draw(self.screen, mouse_pos)
+            tutorial_button.draw(self.screen, mouse_pos)
+            quit_button.draw(self.screen, mouse_pos)
+
             self.clock.tick(FPS)
             pygame.display.update()
+
 
     def tutorial_screen(self):
         tutorial = True
 
-        title = self.font.render("Tutorial", True, BLACK)
-        title_rect = title.get_rect(x=220, y=100)
+        tutorial_title = self.font.render("Tutorial", True, BLACK)
+        tutorial_title_rect = tutorial_title.get_rect(center=(WIN_WIDTH // 2, 100))
 
-        back_button = Button(265, 350, 100, 50, WHITE, BLACK, "Quit", 32)
+        tutorial_text = (
+            "Dette spillet går ut på at du skal gå rundt på kartet "
+            "og samle inn sauer og ta dem med til et trygt sted. "
+            "På veien må du unngå å bli drept av zombier. Likevel, "
+            "kan du velge å drepe zombiene, dersom du er dristig nok, "
+            "ved å trykke på 'spacebar'."
+        )
+
+        words = tutorial_text.split()
+        lines = []
+        line = ""
+
+        for word in words:
+            test_line = line + word + " "
+            if self.font.size(test_line)[0] < WIN_WIDTH - 40:
+                line = test_line
+            else:
+                lines.append(line)
+                line = word + " "
+
+        lines.append(line)
+
+        text_surfaces = [self.font.render(line, True, BLACK) for line in lines]
+        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 180 + i * 30)) for i, text in enumerate(text_surfaces)]
+
+        back_button = Button(10, 350, 100, 50, BLACK, BLACK, "Back", 32)
 
         while tutorial:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    intro = False
+                    tutorial = False
                     self.running = False
 
             mouse_pos = pygame.mouse.get_pos()
@@ -150,13 +189,20 @@ class Game:
 
             if back_button.is_pressed(mouse_pos, mouse_pressed):
                 tutorial = False
+                self.intro_screen()
 
-            self.screen.blit(self.intro_background, (0,0))
-            self.screen.blit(title, title_rect)
-            self.screen.blit(back_button.image, back_button.rect)
+            self.screen.blit(self.intro_background, (0, 0))
+            self.screen.blit(tutorial_title, tutorial_title_rect)
+
+            for text_surface, text_rect in zip(text_surfaces, text_rects):
+                self.screen.blit(text_surface, text_rect)
+
+            # Tegner back-knappen med hover-effekt
+            back_button.draw(self.screen, mouse_pos)
+
             self.clock.tick(FPS)
             pygame.display.update()
-    
+
     def update(self):
         self.all_sprites.update()
 
