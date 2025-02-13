@@ -101,9 +101,11 @@ class Game:
         intro = True
 
         title = self.font.render("Manic Mansion", True, BLACK)
-        title_rect = title.get_rect(x=10, y=10)
+        title_rect = title.get_rect(x=220, y=100)
 
-        play_button = Button(10, 50, 100, 50, WHITE, BLACK, "Play", 32)
+        play_button = Button(265, 200, 100, 50, WHITE, BLACK, "Play", 32)
+        tutorial_button = Button(255, 270, 120, 60, WHITE, BLACK, "Tutorial", 32)
+        quit_button = Button(265, 350, 100, 50, WHITE, BLACK, "Quit", 32)
 
         while intro:
             for event in pygame.event.get():
@@ -116,14 +118,45 @@ class Game:
 
             if play_button.is_pressed(mouse_pos, mouse_pressed):
                 intro = False
+            if tutorial_button.is_pressed(mouse_pos, mouse_pressed):
+                intro = False
+            if quit_button.is_pressed(mouse_pos, mouse_pressed):
+                intro = False
 
             self.screen.blit(self.intro_background, (0,0))
             self.screen.blit(title, title_rect)
             self.screen.blit(play_button.image, play_button.rect)
+            self.screen.blit(tutorial_button.image, tutorial_button.rect)
+            self.screen.blit(quit_button.image, quit_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
-            
 
+    def tutorial_screen(self):
+        tutorial = True
+
+        title = self.font.render("Tutorial", True, BLACK)
+        title_rect = title.get_rect(x=220, y=100)
+
+        back_button = Button(265, 350, 100, 50, WHITE, BLACK, "Quit", 32)
+
+        while tutorial:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    intro = False
+                    self.running = False
+
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_pressed = pygame.mouse.get_pressed()
+
+            if back_button.is_pressed(mouse_pos, mouse_pressed):
+                tutorial = False
+
+            self.screen.blit(self.intro_background, (0,0))
+            self.screen.blit(title, title_rect)
+            self.screen.blit(back_button.image, back_button.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
+    
     def update(self):
         self.all_sprites.update()
 
