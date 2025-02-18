@@ -72,10 +72,11 @@ class Game:
     
     def game_over(self):
         text = self.font.render("Game Over", True, BLACK)
-        text_rect = text.get_rect(center=(WIN_WIDTH/2, WIN_HEIGHT/2))
-
-        restart_button = Button(10, WIN_HEIGHT - 60, 120, 50, BLACK, BLACK, "Restart", 32)
-        main_menu_button = Button(265, 350, 100, 50, BLACK, BLACK, "Main Menu", 32)
+        text_rect = text.get_rect(x=244, y=100)
+        
+        restart_button = Button(255, 200, 120, 50, BLACK, BLACK, "Restart", 32)
+        quit_button = Button(265, 350, 100, 50, BLACK, BLACK, "Quit", 32)
+        tutorial_button = Button(255, 270, 120, 60, BLACK, BLACK, "Tutorial", 32)
 
         for sprite in self.all_sprites:
             sprite.kill()
@@ -91,15 +92,19 @@ class Game:
             if restart_button.is_pressed(mouse_pos, mouse_pressed):
                 self.new()
                 self.main()
-                
-            if main_menu_button.is_pressed(mouse_pos, mouse_pressed):
-                self.running = False  # Stopper game-over-løkken
-                return  # Bryter ut av game_over()
+
+            if tutorial_button.is_pressed(mouse_pos, mouse_pressed):
+                self.from_dead_tutorial_screen()
+            if quit_button.is_pressed(mouse_pos, mouse_pressed):
+                self.running = False
+                pygame.quit()
+                sys.exit()
 
             self.screen.blit(self.go_background, (0,0))
             self.screen.blit(text, text_rect)
             restart_button.draw(self.screen, mouse_pos)
-            main_menu_button.draw(self.screen, mouse_pos)
+            tutorial_button.draw(self.screen, mouse_pos)
+            quit_button.draw(self.screen, mouse_pos)
             self.clock.tick(FPS)
             pygame.display.update()
 
@@ -190,6 +195,64 @@ class Game:
             if back_button.is_pressed(mouse_pos, mouse_pressed):
                 tutorial = False
                 self.intro_screen()
+
+            self.screen.blit(self.intro_background, (0, 0))
+            self.screen.blit(tutorial_title, tutorial_title_rect)
+
+            for text_surface, text_rect in zip(text_surfaces, text_rects):
+                self.screen.blit(text_surface, text_rect)
+
+            # Tegner back-knappen med hover-effekt
+            back_button.draw(self.screen, mouse_pos)
+
+            self.clock.tick(FPS)
+            pygame.display.update()
+
+    def from_dead_tutorial_screen(self):
+        tutorial = True
+
+        tutorial_title = self.font.render("Tutorial", True, BLACK)
+        tutorial_title_rect = tutorial_title.get_rect(center=(WIN_WIDTH // 2, 100))
+
+        tutorial_text = (
+            "Dette spillet går ut på at du skal gå rundt på kartet "
+            "og samle inn sauer og ta dem med til et trygt sted. "
+            "På veien må du unngå å bli drept av zombier. Likevel, "
+            "kan du velge å drepe zombiene, dersom du er dristig nok, "
+            "ved å trykke på 'spacebar'."
+        )
+
+        words = tutorial_text.split()
+        lines = []
+        line = ""
+
+        for word in words:
+            test_line = line + word + " "
+            if self.font.size(test_line)[0] < WIN_WIDTH - 40:
+                line = test_line
+            else:
+                lines.append(line)
+                line = word + " "
+
+        lines.append(line)
+
+        text_surfaces = [self.font.render(line, True, BLACK) for line in lines]
+        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 180 + i * 30)) for i, text in enumerate(text_surfaces)]
+
+        back_button = Button(10, 350, 100, 50, BLACK, BLACK, "Back", 32)
+
+        while tutorial:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    tutorial = False
+                    self.running = False
+
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_pressed = pygame.mouse.get_pressed()
+
+            if back_button.is_pressed(mouse_pos, mouse_pressed):
+                tutorial = False
+                self.game_over()
 
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(tutorial_title, tutorial_title_rect)
