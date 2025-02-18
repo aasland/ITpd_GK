@@ -190,7 +190,7 @@ class Enemy(pygame.sprite.Sprite):
         self.facing = random.choice(["left", "right", "up", "down"])
         self.animation_loop = 1
         self.movement_loop = 0
-        self.max_travel = random.randint(7,30)
+        self.max_travel = random.randint(7,100)
 
         self.image = self.game.enemy_spritesheet.get_sprite(3, 2, self.width, self.height)
         self.image.set_colorkey(BLACK)
@@ -228,6 +228,34 @@ class Enemy(pygame.sprite.Sprite):
 
         self.x_change = 0
         self.y_change = 0
+        self.rect.x += self.x_change
+        self.collide_blocks("x")
+        self.rect.y += self.y_change
+        self.collide_blocks("y")
+
+    def collide_blocks(self, direction):
+        if direction == 'x':
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits:
+                if self.x_change > 0:
+                    self.rect.x = hits[0].rect.left - self.rect.width
+                if self.x_change < 0:
+                    self.rect.x = hits[0].rect.right
+
+                # Snu fienden ved kollisjon
+                self.facing = random.choice(["up", "down", "left", "right"])
+
+        if direction == 'y':
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits:
+                if self.y_change > 0:
+                    self.rect.y = hits[0].rect.top - self.rect.height
+                if self.y_change < 0:
+                    self.rect.y = hits[0].rect.bottom
+
+                # Snu fienden ved kollisjon
+                self.facing = random.choice(["up", "down", "left", "right"])
+        
 
     def movement(self):
         if self.facing == "left":

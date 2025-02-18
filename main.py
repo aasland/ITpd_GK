@@ -74,7 +74,7 @@ class Game:
         text = self.font.render("Game Over", True, BLACK)
         text_rect = text.get_rect(x=244, y=100)
         
-        restart_button = Button(255, 200, 120, 50, BLACK, BLACK, "Restart", 32)
+        restart_button = Button(244, 200, 120, 50, BLACK, BLACK, "Restart", 32)
         quit_button = Button(265, 350, 100, 50, BLACK, BLACK, "Quit", 32)
         tutorial_button = Button(255, 270, 120, 60, BLACK, BLACK, "Tutorial", 32)
 
