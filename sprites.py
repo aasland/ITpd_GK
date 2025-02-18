@@ -215,10 +215,10 @@ class Enemy(pygame.sprite.Sprite):
                             self.game.enemy_spritesheet.get_sprite(64, 96, self.width, self.height),
                             self.game.enemy_spritesheet.get_sprite(96, 96, self.width, self.height)]
                             
-        self.up_animations = [self.game.enemy_spritesheet.get_sprite(0, 0, self.width, self.height),
-                              self.game.enemy_spritesheet.get_sprite(32, 0, self.width, self.height),
-                              self.game.enemy_spritesheet.get_sprite(64, 0, self.width, self.height),
-                              self.game.enemy_spritesheet.get_sprite(96, 0, self.width, self.height)]
+        self.up_animations = [self.game.enemy_spritesheet.get_sprite(0, 128, self.width, self.height),
+                              self.game.enemy_spritesheet.get_sprite(32, 128, self.width, self.height),
+                              self.game.enemy_spritesheet.get_sprite(64, 128, self.width, self.height),
+                              self.game.enemy_spritesheet.get_sprite(96, 128, self.width, self.height)]
 
     def update(self):
         self.movement()
