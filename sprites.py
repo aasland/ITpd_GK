@@ -103,8 +103,6 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(self, self.game.goal_tiles, False):
                 self.carrying_sheep.kill()
                 self.carrying_sheep = None
-                self.sheeps_delivered += 1
-                print(self.sheeps_delivered)
     
     def movement(self):
         keys = pygame.key.get_pressed()
@@ -384,7 +382,6 @@ class Sheep(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
         self.is_carried = False
-        
         
 class Ground(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
