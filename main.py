@@ -18,6 +18,7 @@ class Game:
         self.intro_background = pygame.image.load("img/intro_background.png")
         self.go_background = pygame.image.load("img/intro_background.png")
         self.sheep_spritesheet = Spritesheet("img/sheep.jpg")
+        self.keys = pygame.key.get_pressed()
 
 
 
@@ -45,15 +46,21 @@ class Game:
         self.enemies = pygame.sprite.LayeredUpdates()
         self.attacks = pygame.sprite.LayeredUpdates()
         self.sheeps = pygame.sprite.LayeredUpdates()
+        self.goal_tiles = pygame.sprite.LayeredUpdates()
 
         self.createTilemap()
 
 
     def events(self):
+        self.keys = pygame.key.get_pressed()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e: # Drop sheep with "e"
+                    self.player.drop_sheep()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
