@@ -333,13 +333,29 @@ class Block(pygame.sprite.Sprite):
 
         self.image = self.game.terrain_spritesheet.get_sprite(0, 32, self.height, self.width)
         
-
-        self.rect = self.image.get_rect()
-
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
 
+class Sheep(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game=game
+        self._layer = SHEEP_LAYER
+        self.groups = self.game.all_sprites, self.game.sheeps
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.width = TILESIZE
+        self.height = TILESIZE
+
+        self.image = self.game.sheep_spritesheet.get_sprite(0, 32, self.height, self.width)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        
+        
 class Ground(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
@@ -353,6 +369,24 @@ class Ground(pygame.sprite.Sprite):
         self.height = TILESIZE
 
         self.image = self.game.terrain_spritesheet.get_sprite(0, 0, self.height, self.width)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+class Goal_tile(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = GROUND_LAYER
+        self.groups = self.game.all_sprites
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.width = TILESIZE
+        self.height = TILESIZE
+
+        self.image = self.game.terrain_spritesheet.get_sprite(32, 0, self.height, self.width)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
