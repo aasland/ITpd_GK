@@ -260,6 +260,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y += self.y_change
         self.collide_blocks("y")
 
+        
+
     def collide_blocks(self, direction):
         if direction == 'x':
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
@@ -390,21 +392,29 @@ class Sheep(pygame.sprite.Sprite):
         self.rect.y = self.y
         self.is_carried = False
 
-        self.left_animations = [self.game.sheep_spritesheet.get_sprite(0, 32, self.width, self.height),
-                                self.game.sheep_spritesheet.get_sprite(32, 32, self.width, self.height),
-                                self.game.sheep_spritesheet.get_sprite(64, 32, self.width, self.height)]
+        self.down_animations = [
+            self.game.sheep_spritesheet.get_sprite(0, 32, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(32, 32, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(64, 32, self.width, self.height)
+        ]
 
-        self.right_animations = [self.game.sheep_spritesheet.get_sprite(0, 64, self.width, self.height),
-                                self.game.sheep_spritesheet.get_sprite(32, 64, self.width, self.height),
-                                self.game.sheep_spritesheet.get_sprite(64, 64, self.width, self.height)]
+        self.left_animations = [
+            self.game.sheep_spritesheet.get_sprite(0, 64, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(32, 64, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(64, 64, self.width, self.height)
+        ]
 
-        self.up_animations = [self.game.sheep_spritesheet.get_sprite(0, 96, self.width, self.height),
-                                 self.game.sheep_spritesheet.get_sprite(32, 96, self.width, self.height),
-                                 self.game.sheep_spritesheet.get_sprite(64, 96, self.width, self.height)]
+        self.right_animations = [
+            self.game.sheep_spritesheet.get_sprite(0, 96, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(32, 96, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(64, 96, self.width, self.height)
+        ]
 
-        self.down_animations = [self.game.sheep_spritesheet.get_sprite(0, 128, self.width, self.height),
-                              self.game.sheep_spritesheet.get_sprite(32, 128, self.width, self.height),
-                              self.game.sheep_spritesheet.get_sprite(64, 128, self.width, self.height)]
+        self.up_animations = [
+            self.game.sheep_spritesheet.get_sprite(0, 128, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(32, 128, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(64, 128, self.width, self.height)
+        ]
 
     def update(self):
         self.movement()
@@ -461,18 +471,25 @@ class Sheep(pygame.sprite.Sprite):
                 self.facing = random.choice(["up", "left", "right"])
 
     def animate(self):
+        """ Bytter bilde basert på retning og loop """
         if self.facing == "left":
-            self.image = self.left_animations[math.floor(self.animation_loop)]
+            anim_list = self.left_animations
         elif self.facing == "right":
-            self.image = self.right_animations[math.floor(self.animation_loop)]
+            anim_list = self.right_animations
         elif self.facing == "up":
-            self.image = self.up_animations[math.floor(self.animation_loop)]
+            anim_list = self.up_animations
         elif self.facing == "down":
-            self.image = self.down_animations[math.floor(self.animation_loop)]
-        
+            anim_list = self.down_animations
+
+        # Velg bilde basert på animation_loop
+        index = int(self.animation_loop) % len(anim_list)
+        self.image = anim_list[index]
+
+        # Øk loop og resett ved grense
         self.animation_loop += 0.1
-        if self.animation_loop >= 3:
+        if self.animation_loop >= 4:
             self.animation_loop = 1
+
 
         
 class Ground(pygame.sprite.Sprite):
