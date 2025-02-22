@@ -17,6 +17,8 @@ class Game:
         self.attack_spritesheet = Spritesheet("img/attack.png")
         self.intro_background = pygame.image.load("img/intro_background.png")
         self.go_background = pygame.image.load("img/intro_background.png")
+        self.sheep_spritesheet = Spritesheet("img/sheep.jpg")
+
 
 
     def createTilemap(self):
@@ -29,6 +31,12 @@ class Game:
                     Enemy(self,j,i)
                 if column == "P":
                     self.player = Player(self,j,i)
+                if column == "S":
+                    Sheep(self,j,i)
+                if column == "G":
+                    Goal_tile(self,j,i)
+
+
 
     def new(self):
         self.playing = True
@@ -36,6 +44,7 @@ class Game:
         self.blocks = pygame.sprite.LayeredUpdates()
         self.enemies = pygame.sprite.LayeredUpdates()
         self.attacks = pygame.sprite.LayeredUpdates()
+        self.sheeps = pygame.sprite.LayeredUpdates()
 
         self.createTilemap()
 
