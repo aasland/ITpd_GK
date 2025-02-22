@@ -366,7 +366,7 @@ class Block(pygame.sprite.Sprite):
 
 class Sheep(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.game=game
+        self.game = game
         self._layer = SHEEP_LAYER
         self.groups = self.game.all_sprites, self.game.sheeps
         pygame.sprite.Sprite.__init__(self, self.groups)
@@ -376,12 +376,104 @@ class Sheep(pygame.sprite.Sprite):
         self.width = TILESIZE
         self.height = TILESIZE
 
-        self.image = self.game.sheep_spritesheet.get_sprite(0, 32, self.height, self.width)
+        self.x_change = 0
+        self.y_change = 0
 
+        self.facing = random.choice(["left", "right", "up", "down"])
+        self.animation_loop = 1
+        self.movement_loop = 0
+        self.max_travel = random.randint(7, 100)
+
+        self.image = self.game.sheep_spritesheet.get_sprite(0, 32, self.width, self.height)
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
         self.is_carried = False
+
+        self.left_animations = [self.game.sheep_spritesheet.get_sprite(0, 32, self.width, self.height),
+                                self.game.sheep_spritesheet.get_sprite(32, 32, self.width, self.height),
+                                self.game.sheep_spritesheet.get_sprite(64, 32, self.width, self.height)]
+
+        self.right_animations = [self.game.sheep_spritesheet.get_sprite(0, 64, self.width, self.height),
+                                self.game.sheep_spritesheet.get_sprite(32, 64, self.width, self.height),
+                                self.game.sheep_spritesheet.get_sprite(64, 64, self.width, self.height)]
+
+        self.up_animations = [self.game.sheep_spritesheet.get_sprite(0, 96, self.width, self.height),
+                                 self.game.sheep_spritesheet.get_sprite(32, 96, self.width, self.height),
+                                 self.game.sheep_spritesheet.get_sprite(64, 96, self.width, self.height)]
+
+        self.down_animations = [self.game.sheep_spritesheet.get_sprite(0, 128, self.width, self.height),
+                              self.game.sheep_spritesheet.get_sprite(32, 128, self.width, self.height),
+                              self.game.sheep_spritesheet.get_sprite(64, 128, self.width, self.height)]
+
+    def update(self):
+        self.movement()
+        self.animate()
+        self.rect.x += self.x_change
+        self.collide_blocks("x")
+        self.rect.y += self.y_change
+        self.collide_blocks("y")
+        self.x_change = 0
+        self.y_change = 0
+
+    def collide_blocks(self, direction):
+        if direction == 'x':
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits:
+                if self.x_change > 0:
+                    self.rect.x = hits[0].rect.left - self.rect.width
+                if self.x_change < 0:
+                    self.rect.x = hits[0].rect.right
+                self.facing = random.choice(["up", "down", "left", "right"])
+
+        if direction == 'y':
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits:
+                if self.y_change > 0:
+                    self.rect.y = hits[0].rect.top - self.rect.height
+                if self.y_change < 0:
+                    self.rect.y = hits[0].rect.bottom
+                self.facing = random.choice(["up", "down", "left", "right"])
+
+    def movement(self):
+        if self.facing == "left":
+            self.x_change -= SHEEP_SPEED
+            self.movement_loop -= 1
+            if self.movement_loop <= -self.max_travel:
+                self.facing = random.choice(["right", "up", "down"])
+
+        if self.facing == "right":
+            self.x_change += SHEEP_SPEED
+            self.movement_loop += 1
+            if self.movement_loop >= self.max_travel:
+                self.facing = random.choice(["left", "up", "down"])
+
+        if self.facing == "up":
+            self.y_change -= SHEEP_SPEED
+            self.movement_loop -= 1
+            if self.movement_loop <= -self.max_travel:
+                self.facing = random.choice(["down", "left", "right"])
+
+        if self.facing == "down":
+            self.y_change += SHEEP_SPEED
+            self.movement_loop += 1
+            if self.movement_loop >= self.max_travel:
+                self.facing = random.choice(["up", "left", "right"])
+
+    def animate(self):
+        if self.facing == "left":
+            self.image = self.left_animations[math.floor(self.animation_loop)]
+        elif self.facing == "right":
+            self.image = self.right_animations[math.floor(self.animation_loop)]
+        elif self.facing == "up":
+            self.image = self.up_animations[math.floor(self.animation_loop)]
+        elif self.facing == "down":
+            self.image = self.down_animations[math.floor(self.animation_loop)]
+        
+        self.animation_loop += 0.1
+        if self.animation_loop >= 3:
+            self.animation_loop = 1
+
         
 class Ground(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
