@@ -177,7 +177,7 @@ class Game:
             "og samle inn sauer og ta dem med til et trygt sted. "
             "På veien må du unngå å bli drept av zombier. Likevel, "
             "kan du velge å drepe zombiene, dersom du er dristig nok, "
-            "ved å trykke på 'spacebar'."
+            "ved å trykke på 'spacebar'. Du plukker opp sauer ved å trykke 'e'"
         )
 
         words = tutorial_text.split()
@@ -235,7 +235,7 @@ class Game:
             "og samle inn sauer og ta dem med til et trygt sted. "
             "På veien må du unngå å bli drept av zombier. Likevel, "
             "kan du velge å drepe zombiene, dersom du er dristig nok, "
-            "ved å trykke på 'spacebar'."
+            "ved å trykke på 'spacebar'.Du plukker opp sauer ved å trykke 'e'"
         )
 
         words = tutorial_text.split()
