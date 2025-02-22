@@ -20,6 +20,8 @@ class Player(pygame.sprite.Sprite):
         self._layer = PLAYER_LAYER
         self.groups = self.game.all_sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
+        self.carrying_sheep = None  
+        self.sheeps_delivered = 0
 
         self.x = x * TILESIZE
         self.y = y * TILESIZE
@@ -63,6 +65,8 @@ class Player(pygame.sprite.Sprite):
         self.movement()
         self.animate()
         self.collide_enemy()
+        self.collide_sheep()
+        self.collide_goal()
         
         self.rect.x += self.x_change
         self.collide_blocks("x")
@@ -76,6 +80,31 @@ class Player(pygame.sprite.Sprite):
 
         self.x_change = 0
         self.y_change = 0
+    
+    def collide_sheep(self):
+        hits = pygame.sprite.spritecollide(self, self.game.sheeps, False)
+        if hits and self.game.keys[pygame.K_e]:  # Check if 'e' is pressed
+            if self.carrying_sheep is None:
+                self.carrying_sheep = hits[0]
+                self.carrying_sheep.is_carried = True
+                self.carrying_sheep.rect.center = self.rect.center  # Move sheep to player
+        
+    def drop_sheep(self):  # New method to drop the sheep
+        if self.carrying_sheep:
+            # Snap to grid
+            self.carrying_sheep.rect.x = int(self.rect.x / TILESIZE) * TILESIZE
+            self.carrying_sheep.rect.y = int(self.rect.y / TILESIZE) * TILESIZE
+            self.carrying_sheep.is_carried = False #remove carried flag
+            self.carrying_sheep.animation_loop = 1 # Add this!
+            self.carrying_sheep = None
+    
+    def collide_goal(self):
+        if self.carrying_sheep:
+            if pygame.sprite.spritecollide(self, self.game.goal_tiles, False):
+                self.carrying_sheep.kill()
+                self.carrying_sheep = None
+                self.sheeps_delivered += 1
+                print(self.sheeps_delivered)
     
     def movement(self):
         keys = pygame.key.get_pressed()
@@ -354,6 +383,7 @@ class Sheep(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
+        self.is_carried = False
         
         
 class Ground(pygame.sprite.Sprite):
@@ -378,7 +408,7 @@ class Goal_tile(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
         self._layer = GROUND_LAYER
-        self.groups = self.game.all_sprites
+        self.groups = self.game.all_sprites, self.game.goal_tiles
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.x = x * TILESIZE
