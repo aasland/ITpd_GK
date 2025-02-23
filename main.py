@@ -79,6 +79,7 @@ class Game:
         self.clock.tick(FPS)
         pygame.display.update()
 
+
     def main(self):
 
         while self.playing:

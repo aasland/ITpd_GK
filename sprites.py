@@ -34,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.facing = "down"
         self.animation_loop = 1
 
-        self.image = self.game.character_spritesheet.get_sprite(0,0,self.width,self.height)
+        self.image = self.game.character_spritesheet.get_sprite(0, 0, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -73,10 +73,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.y_change
         self.collide_blocks("y")
 
-        # Sjekk kollisjon med fiender
-        if pygame.sprite.spritecollide(self, self.game.enemies, False):
-            self.game.game_over()  # Kaller game over-funksjonen når spilleren kolliderer med en fiende
-
+        # Oppdater posisjonen til sauen hvis spilleren bærer den
+        if self.carrying_sheep:
+            self.carrying_sheep.rect.center = self.rect.center
 
         self.x_change = 0
         self.y_change = 0
@@ -89,13 +88,12 @@ class Player(pygame.sprite.Sprite):
                 self.carrying_sheep.is_carried = True
                 self.carrying_sheep.rect.center = self.rect.center  # Move sheep to player
         
-    def drop_sheep(self):  # New method to drop the sheep
+    def drop_sheep(self):  
         if self.carrying_sheep:
-            # Snap to grid
             self.carrying_sheep.rect.x = int(self.rect.x / TILESIZE) * TILESIZE
             self.carrying_sheep.rect.y = int(self.rect.y / TILESIZE) * TILESIZE
-            self.carrying_sheep.is_carried = False #remove carried flag
-            self.carrying_sheep.animation_loop = 1 # Add this!
+            self.carrying_sheep.is_carried = False
+            self.carrying_sheep.animation_loop = 1
             self.carrying_sheep = None
     
     def collide_goal(self):
@@ -103,6 +101,13 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(self, self.game.goal_tiles, False):
                 self.carrying_sheep.kill()
                 self.carrying_sheep = None
+                self.sheeps_delivered += 1  # Øk telleren for sauer levert
+
+    def draw_text(self, surface):
+        font = pygame.font.Font("Iceberg-Regular.ttf", 24)
+        text = font.render(f"Sauer levert: {self.sheeps_delivered}", True, (255, 255, 255))
+        text_rect = text.get_rect(center=(self.rect.centerx, self.rect.top - 10))
+        surface.blit(text, text_rect)
     
     def movement(self):
         keys = pygame.key.get_pressed()
