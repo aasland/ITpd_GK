@@ -1,2 +1,2 @@
-DS_Store
-pycahce
+__pycache__
+.DS_Store
