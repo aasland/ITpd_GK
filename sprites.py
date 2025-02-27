@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.groups = self.game.all_sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.carrying_sheep = None  
-        self.sheeps_delivered = 0
+        self.game.sheeps_delivered = 0
 
         self.x = x * TILESIZE
         self.y = y * TILESIZE
@@ -95,13 +95,14 @@ class Player(pygame.sprite.Sprite):
             self.carrying_sheep.is_carried = False
             self.carrying_sheep.animation_loop = 1
             self.carrying_sheep = None
+            
     
     def collide_goal(self):
         if self.carrying_sheep:
             if pygame.sprite.spritecollide(self, self.game.goal_tiles, False):
                 self.carrying_sheep.kill()
                 self.carrying_sheep = None
-                self.sheeps_delivered += 1  # Øk telleren for sauer levert
+                self.game.sheeps_delivered += 1  # Øk telleren for sauer levert
 
     def draw_text(self, surface):
         font = pygame.font.Font("Iceberg-Regular.ttf", 24)

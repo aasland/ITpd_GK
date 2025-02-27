@@ -10,6 +10,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.font = pygame.font.Font("Iceberg-Regular.ttf", 32)
+        self.sheeps_delivered = 0
+
 
         self.character_spritesheet = Spritesheet("img/characters.png")
         self.terrain_spritesheet = Spritesheet("img/terrain.png")
@@ -72,6 +74,48 @@ class Game:
                         Attack(self, self.player.rect.x - TILESIZE, self.player.rect.y)
                     if self.player.facing == "right":
                         Attack(self, self.player.rect.x + TILESIZE, self.player.rect.y)
+        if self.sheeps_delivered == 1:
+            self.winning_screen()
+
+
+
+    def winning_screen(self):
+        text = self.font.render("Gratulerer, du vant!", True, BLACK)
+        text_rect = text.get_rect(x=185, y=100)
+        
+        restart_button = Button(255, 200, 120, 50, BLACK, BLACK, "Restart", 32)
+        quit_button = Button(265, 350, 100, 50, BLACK, BLACK, "Quit", 32)
+        tutorial_button = Button(255, 270, 120, 60, BLACK, BLACK, "Tutorial", 32)
+
+        for sprite in self.all_sprites:
+            sprite.kill()
+
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_pressed = pygame.mouse.get_pressed()
+            
+            if restart_button.is_pressed(mouse_pos, mouse_pressed):
+                self.new()
+                self.main()
+
+            if tutorial_button.is_pressed(mouse_pos, mouse_pressed):
+                self.from_dead_tutorial_screen()
+            if quit_button.is_pressed(mouse_pos, mouse_pressed):
+                self.running = False
+                pygame.quit()
+                sys.exit()
+
+            self.screen.blit(self.go_background, (0,0))
+            self.screen.blit(text, text_rect)
+            restart_button.draw(self.screen, mouse_pos)
+            tutorial_button.draw(self.screen, mouse_pos)
+            quit_button.draw(self.screen, mouse_pos)
+            self.clock.tick(FPS)
+            pygame.display.update()
 
     def draw(self):
         self.screen.fill(BLACK)
