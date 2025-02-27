@@ -74,7 +74,7 @@ class Game:
                         Attack(self, self.player.rect.x - TILESIZE, self.player.rect.y)
                     if self.player.facing == "right":
                         Attack(self, self.player.rect.x + TILESIZE, self.player.rect.y)
-        if self.sheeps_delivered == 1:
+        if self.sheeps_delivered == 5:
             self.winning_screen()
 
 
