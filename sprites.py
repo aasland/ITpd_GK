@@ -390,9 +390,9 @@ class Sheep(pygame.sprite.Sprite):
         self.facing = random.choice(["left", "right", "up", "down"])
         self.animation_loop = 1
         self.movement_loop = 0
-        self.max_travel = random.randint(7, 100)
+        self.max_travel = random.randint(20, 80)
 
-        self.image = self.game.sheep_spritesheet.get_sprite(0, 32, self.width, self.height)
+        self.image = self.game.sheep_spritesheet.get_sprite(0, 0, self.width, self.height)
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
@@ -457,20 +457,17 @@ class Sheep(pygame.sprite.Sprite):
             self.movement_loop -= 1
             if self.movement_loop <= -self.max_travel:
                 self.facing = random.choice(["right", "up", "down"])
-
-        if self.facing == "right":
+        elif self.facing == "right":
             self.x_change += SHEEP_SPEED
             self.movement_loop += 1
             if self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["left", "up", "down"])
-
-        if self.facing == "up":
+        elif self.facing == "up":
             self.y_change -= SHEEP_SPEED
             self.movement_loop -= 1
             if self.movement_loop <= -self.max_travel:
                 self.facing = random.choice(["down", "left", "right"])
-
-        if self.facing == "down":
+        elif self.facing == "down":
             self.y_change += SHEEP_SPEED
             self.movement_loop += 1
             if self.movement_loop >= self.max_travel:
