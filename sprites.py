@@ -399,27 +399,27 @@ class Sheep(pygame.sprite.Sprite):
         self.is_carried = False
 
         self.down_animations = [
+            self.game.sheep_spritesheet.get_sprite(0, 0, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(32, 0, self.width, self.height),
+            self.game.sheep_spritesheet.get_sprite(64, 0, self.width, self.height)
+        ]
+
+        self.left_animations = [
             self.game.sheep_spritesheet.get_sprite(0, 32, self.width, self.height),
             self.game.sheep_spritesheet.get_sprite(32, 32, self.width, self.height),
             self.game.sheep_spritesheet.get_sprite(64, 32, self.width, self.height)
         ]
 
-        self.left_animations = [
+        self.right_animations = [
             self.game.sheep_spritesheet.get_sprite(0, 64, self.width, self.height),
             self.game.sheep_spritesheet.get_sprite(32, 64, self.width, self.height),
             self.game.sheep_spritesheet.get_sprite(64, 64, self.width, self.height)
         ]
 
-        self.right_animations = [
+        self.up_animations = [
             self.game.sheep_spritesheet.get_sprite(0, 96, self.width, self.height),
             self.game.sheep_spritesheet.get_sprite(32, 96, self.width, self.height),
             self.game.sheep_spritesheet.get_sprite(64, 96, self.width, self.height)
-        ]
-
-        self.up_animations = [
-            self.game.sheep_spritesheet.get_sprite(0, 128, self.width, self.height),
-            self.game.sheep_spritesheet.get_sprite(32, 128, self.width, self.height),
-            self.game.sheep_spritesheet.get_sprite(64, 128, self.width, self.height)
         ]
 
     def update(self):
