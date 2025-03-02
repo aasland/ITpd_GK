@@ -457,22 +457,25 @@ class Sheep(pygame.sprite.Sprite):
             self.movement_loop -= 1
             if self.movement_loop <= -self.max_travel:
                 self.facing = random.choice(["right", "up", "down"])
+                self.movement_loop = 0
         elif self.facing == "right":
             self.x_change += SHEEP_SPEED
             self.movement_loop += 1
             if self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["left", "up", "down"])
+                self.movement_loop = 0
         elif self.facing == "up":
             self.y_change -= SHEEP_SPEED
             self.movement_loop -= 1
             if self.movement_loop <= -self.max_travel:
                 self.facing = random.choice(["down", "left", "right"])
+                self.movement_loop = 0
         elif self.facing == "down":
             self.y_change += SHEEP_SPEED
             self.movement_loop += 1
             if self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["up", "left", "right"])
-
+                self.movement_loop = 0
     def animate(self):
         """ Bytter bilde basert på retning og loop """
         if self.facing == "left":
