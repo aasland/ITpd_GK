@@ -136,8 +136,9 @@ class Player(pygame.sprite.Sprite):
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
         if hits:
-            self.kill()
             self.game.playing = False
+            self.game.game_over()
+            self.kill()
 
     def collide_blocks(self,direction):
         if direction == 'x':
@@ -254,17 +255,32 @@ class Enemy(pygame.sprite.Sprite):
                               self.game.enemy_spritesheet.get_sprite(96, 128, self.width, self.height)]
 
     def update(self):
+        # Store previous position
+        old_x = self.rect.x
+        old_y = self.rect.y
+        
         self.movement()
-        self.animate()
+        
+        # Check x-axis collision
         self.rect.x += self.x_change
+        block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+        if block_hits:
+            self.rect.x = old_x
+            self.facing = random.choice(["up", "down"])
+            self.movement_loop = 0
+        
+        # Check y-axis collision
         self.rect.y += self.y_change
-
+        block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+        if block_hits:
+            self.rect.y = old_y
+            self.facing = random.choice(["left", "right"])
+            self.movement_loop = 0
+        
+        self.animate()
         self.x_change = 0
         self.y_change = 0
-        self.rect.x += self.x_change
-        self.collide_blocks("x")
-        self.rect.y += self.y_change
-        self.collide_blocks("y")
+
 
         
 
@@ -293,29 +309,45 @@ class Enemy(pygame.sprite.Sprite):
         
 
     def movement(self):
+        # Add a check before moving
         if self.facing == "left":
-            self.x_change -= ENEMY_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= -self.max_travel:
+            # Test move first
+            self.x_change = -ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop <= -self.max_travel:
+                # Change direction before getting stuck
                 self.facing = random.choice(["right", "up", "down"])
+                self.movement_loop = 0
+            else:
+                self.movement_loop -= 1
 
-        if self.facing == "right":
-            self.x_change += ENEMY_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
+        elif self.facing == "right":
+            self.x_change = ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["left", "up", "down"])
+                self.movement_loop = 0
+            else:
+                self.movement_loop += 1
 
-        if self.facing == "up":
-            self.y_change -= ENEMY_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= -self.max_travel:
+        elif self.facing == "up":
+            self.y_change = -ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop <= -self.max_travel:
                 self.facing = random.choice(["down", "left", "right"])
+                self.movement_loop = 0
+            else:
+                self.movement_loop -= 1
 
-        if self.facing == "down":
-            self.y_change += ENEMY_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
+        elif self.facing == "down":
+            self.y_change = ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["up", "left", "right"])
+                self.movement_loop = 0
+            else:
+                self.movement_loop += 1
+
 
     def animate(self):
         if self.facing == "left":
@@ -390,7 +422,7 @@ class Sheep(pygame.sprite.Sprite):
         self.facing = random.choice(["left", "right", "up", "down"])
         self.animation_loop = 1
         self.movement_loop = 0
-        self.max_travel = random.randint(20, 80)
+        self.max_travel = random.randint(20, 280)
 
         self.image = self.game.sheep_spritesheet.get_sprite(0, 0, self.width, self.height)
         self.rect = self.image.get_rect()
@@ -423,14 +455,33 @@ class Sheep(pygame.sprite.Sprite):
         ]
 
     def update(self):
-        self.movement()
-        self.animate()
+    # Store previous position
+        old_x = self.rect.x
+        old_y = self.rect.y
+        
+        if not self.is_carried:
+            self.movement()
+        
+        # Check x-axis collision
         self.rect.x += self.x_change
-        self.collide_blocks("x")
+        block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+        if block_hits:
+            self.rect.x = old_x
+            self.facing = random.choice(["up", "down"])
+            self.movement_loop = 0
+        
+        # Check y-axis collision
         self.rect.y += self.y_change
-        self.collide_blocks("y")
+        block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+        if block_hits:
+            self.rect.y = old_y
+            self.facing = random.choice(["left", "right"])
+            self.movement_loop = 0
+        
+        self.animate()
         self.x_change = 0
         self.y_change = 0
+
 
     def collide_blocks(self, direction):
         if direction == 'x':
@@ -452,30 +503,45 @@ class Sheep(pygame.sprite.Sprite):
                 self.facing = random.choice(["up", "down", "left", "right"])
 
     def movement(self):
+        # Add a check before moving
         if self.facing == "left":
-            self.x_change -= SHEEP_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= -self.max_travel:
+            # Test move first
+            self.x_change = -ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop <= -self.max_travel:
+                # Change direction before getting stuck
                 self.facing = random.choice(["right", "up", "down"])
                 self.movement_loop = 0
+            else:
+                self.movement_loop -= 1
+
         elif self.facing == "right":
-            self.x_change += SHEEP_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
+            self.x_change = ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["left", "up", "down"])
                 self.movement_loop = 0
+            else:
+                self.movement_loop += 1
+
         elif self.facing == "up":
-            self.y_change -= SHEEP_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= -self.max_travel:
+            self.y_change = -ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop <= -self.max_travel:
                 self.facing = random.choice(["down", "left", "right"])
                 self.movement_loop = 0
+            else:
+                self.movement_loop -= 1
+
         elif self.facing == "down":
-            self.y_change += SHEEP_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
+            self.y_change = ENEMY_SPEED
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits or self.movement_loop >= self.max_travel:
                 self.facing = random.choice(["up", "left", "right"])
                 self.movement_loop = 0
+            else:
+                self.movement_loop += 1
+
     def animate(self):
         """ Bytter bilde basert på retning og loop """
         if self.facing == "left":

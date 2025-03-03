@@ -23,7 +23,7 @@ tilemap = [
     "BBBBBBBBBBBBBBBBBBBBBBBBBB",
     "B..E......S........BBBBBBB",
     "B.............BB...BBBBBBB",
-    "B....BBBBB...........GGGGB",
+    "B....BBBBB.......E...GGGGB",
     "B............E.......GGGGB",
     "B........P...........GGGGB",
     "B..S...............BBBB.BB",

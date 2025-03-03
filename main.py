@@ -132,10 +132,17 @@ class Game:
             self.draw()
     
     def game_over(self):
+        self.all_sprites.empty()
+        self.blocks.empty()
+        self.enemies.empty()
+        self.attacks.empty()
+        self.sheeps.empty()
+        self.goal_tiles.empty()
+
         text = self.font.render("Game Over", True, BLACK)
         text_rect = text.get_rect(x=244, y=100)
         
-        restart_button = Button(244, 200, 120, 50, BLACK, BLACK, "Restart", 32)
+        restart_button = Button(255, 200, 120, 50, BLACK, BLACK, "Restart", 32)
         quit_button = Button(265, 350, 100, 50, BLACK, BLACK, "Quit", 32)
         tutorial_button = Button(255, 270, 120, 60, BLACK, BLACK, "Tutorial", 32)
 
@@ -222,7 +229,9 @@ class Game:
             "og samle inn sauer og ta dem med til et trygt sted. "
             "På veien må du unngå å bli drept av zombier. Likevel, "
             "kan du velge å drepe zombiene, dersom du er dristig nok, "
-            "ved å trykke på 'spacebar'. Du plukker opp sauer ved å trykke 'e'"
+            "ved å trykke på 'spacebar'. Du plukker opp sauer ved å trykke 'e' og "
+            "de blir sluppet løs med en gang du beveger deg innenfor det brune feltet. "
+            "For å bevege deg bruker du piltastene"
         )
 
         words = tutorial_text.split()
@@ -240,9 +249,9 @@ class Game:
         lines.append(line)
 
         text_surfaces = [self.font.render(line, True, BLACK) for line in lines]
-        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 180 + i * 30)) for i, text in enumerate(text_surfaces)]
+        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 150 + i * 30)) for i, text in enumerate(text_surfaces)]
 
-        back_button = Button(10, 350, 100, 50, BLACK, BLACK, "Back", 32)
+        back_button = Button(10, 420, 100, 50, BLACK, BLACK, "Back", 32)
 
         while tutorial:
             for event in pygame.event.get():
@@ -280,7 +289,9 @@ class Game:
             "og samle inn sauer og ta dem med til et trygt sted. "
             "På veien må du unngå å bli drept av zombier. Likevel, "
             "kan du velge å drepe zombiene, dersom du er dristig nok, "
-            "ved å trykke på 'spacebar'.Du plukker opp sauer ved å trykke 'e'"
+            "ved å trykke på 'spacebar'.Du plukker opp sauer ved å trykke 'e' og "
+            "de blir sluppet løs med en gang du beveger deg innenfor det brune feltet. "
+            "For å bevege deg bruker du piltastene"
         )
 
         words = tutorial_text.split()
@@ -298,9 +309,9 @@ class Game:
         lines.append(line)
 
         text_surfaces = [self.font.render(line, True, BLACK) for line in lines]
-        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 180 + i * 30)) for i, text in enumerate(text_surfaces)]
+        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 150 + i * 30)) for i, text in enumerate(text_surfaces)]
 
-        back_button = Button(10, 350, 100, 50, BLACK, BLACK, "Back", 32)
+        back_button = Button(10, 420, 100, 50, BLACK, BLACK, "Back", 32)
 
         while tutorial:
             for event in pygame.event.get():
@@ -338,7 +349,9 @@ class Game:
             "og samle inn sauer og ta dem med til et trygt sted. "
             "På veien må du unngå å bli drept av zombier. Likevel, "
             "kan du velge å drepe zombiene, dersom du er dristig nok, "
-            "ved å trykke på 'spacebar'.Du plukker opp sauer ved å trykke 'e'"
+            "ved å trykke på 'spacebar'.Du plukker opp sauer ved å trykke 'e' og "
+            "de blir sluppet løs med en gang du beveger deg innenfor det brune feltet. "
+            "For å bevege deg bruker du piltastene"
         )
 
         words = tutorial_text.split()
@@ -356,9 +369,9 @@ class Game:
         lines.append(line)
 
         text_surfaces = [self.font.render(line, True, BLACK) for line in lines]
-        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 180 + i * 30)) for i, text in enumerate(text_surfaces)]
+        text_rects = [text.get_rect(center=(WIN_WIDTH // 2, 150 + i * 30)) for i, text in enumerate(text_surfaces)]
 
-        back_button = Button(10, 350, 100, 50, BLACK, BLACK, "Back", 32)
+        back_button = Button(10, 420, 100, 50, BLACK, BLACK, "Back", 32)
 
         while tutorial:
             for event in pygame.event.get():
