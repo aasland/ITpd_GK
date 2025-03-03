@@ -61,7 +61,7 @@ class Game:
                 self.playing = False
                 self.running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_e: # Drop sheep with "e"
+                if event.key == pygame.K_e:
                     self.player.drop_sheep()
 
             if event.type == pygame.KEYDOWN:
@@ -209,7 +209,6 @@ class Game:
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
 
-            # Bruk den nye `draw()`-metoden for å tegne knappene med hover-effekt
             play_button.draw(self.screen, mouse_pos)
             tutorial_button.draw(self.screen, mouse_pos)
             quit_button.draw(self.screen, mouse_pos)
@@ -272,7 +271,6 @@ class Game:
             for text_surface, text_rect in zip(text_surfaces, text_rects):
                 self.screen.blit(text_surface, text_rect)
 
-            # Tegner back-knappen med hover-effekt
             back_button.draw(self.screen, mouse_pos)
 
             self.clock.tick(FPS)
@@ -332,7 +330,6 @@ class Game:
             for text_surface, text_rect in zip(text_surfaces, text_rects):
                 self.screen.blit(text_surface, text_rect)
 
-            # Tegner back-knappen med hover-effekt
             back_button.draw(self.screen, mouse_pos)
 
             self.clock.tick(FPS)
@@ -392,7 +389,6 @@ class Game:
             for text_surface, text_rect in zip(text_surfaces, text_rects):
                 self.screen.blit(text_surface, text_rect)
 
-            # Tegner back-knappen med hover-effekt
             back_button.draw(self.screen, mouse_pos)
 
             self.clock.tick(FPS)

@@ -73,7 +73,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.y_change
         self.collide_blocks("y")
 
-        # Oppdater posisjonen til sauen hvis spilleren bærer den
         if self.carrying_sheep:
             self.carrying_sheep.rect.center = self.rect.center
 
@@ -82,11 +81,11 @@ class Player(pygame.sprite.Sprite):
     
     def collide_sheep(self):
         hits = pygame.sprite.spritecollide(self, self.game.sheeps, False)
-        if hits and self.game.keys[pygame.K_e]:  # Check if 'e' is pressed
+        if hits and self.game.keys[pygame.K_e]:
             if self.carrying_sheep is None:
                 self.carrying_sheep = hits[0]
                 self.carrying_sheep.is_carried = True
-                self.carrying_sheep.rect.center = self.rect.center  # Move sheep to player
+                self.carrying_sheep.rect.center = self.rect.center
         
     def drop_sheep(self):  
         if self.carrying_sheep:
@@ -102,7 +101,7 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(self, self.game.goal_tiles, False):
                 self.carrying_sheep.kill()
                 self.carrying_sheep = None
-                self.game.sheeps_delivered += 1  # Øk telleren for sauer levert
+                self.game.sheeps_delivered += 1
 
     def draw_text(self, surface):
         font = pygame.font.Font("Iceberg-Regular.ttf", 24)
@@ -255,13 +254,11 @@ class Enemy(pygame.sprite.Sprite):
                               self.game.enemy_spritesheet.get_sprite(96, 128, self.width, self.height)]
 
     def update(self):
-        # Store previous position
         old_x = self.rect.x
         old_y = self.rect.y
         
         self.movement()
         
-        # Check x-axis collision
         self.rect.x += self.x_change
         block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
         if block_hits:
@@ -269,7 +266,6 @@ class Enemy(pygame.sprite.Sprite):
             self.facing = random.choice(["up", "down"])
             self.movement_loop = 0
         
-        # Check y-axis collision
         self.rect.y += self.y_change
         block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
         if block_hits:
@@ -293,7 +289,6 @@ class Enemy(pygame.sprite.Sprite):
                 if self.x_change < 0:
                     self.rect.x = hits[0].rect.right
 
-                # Snu fienden ved kollisjon
                 self.facing = random.choice(["up", "down", "left", "right"])
 
         if direction == 'y':
@@ -304,18 +299,14 @@ class Enemy(pygame.sprite.Sprite):
                 if self.y_change < 0:
                     self.rect.y = hits[0].rect.bottom
 
-                # Snu fienden ved kollisjon
                 self.facing = random.choice(["up", "down", "left", "right"])
         
 
     def movement(self):
-        # Add a check before moving
         if self.facing == "left":
-            # Test move first
             self.x_change = -ENEMY_SPEED
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
             if hits or self.movement_loop <= -self.max_travel:
-                # Change direction before getting stuck
                 self.facing = random.choice(["right", "up", "down"])
                 self.movement_loop = 0
             else:
@@ -455,14 +446,12 @@ class Sheep(pygame.sprite.Sprite):
         ]
 
     def update(self):
-    # Store previous position
         old_x = self.rect.x
         old_y = self.rect.y
         
         if not self.is_carried:
             self.movement()
         
-        # Check x-axis collision
         self.rect.x += self.x_change
         block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
         if block_hits:
@@ -470,7 +459,6 @@ class Sheep(pygame.sprite.Sprite):
             self.facing = random.choice(["up", "down"])
             self.movement_loop = 0
         
-        # Check y-axis collision
         self.rect.y += self.y_change
         block_hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
         if block_hits:
@@ -503,13 +491,10 @@ class Sheep(pygame.sprite.Sprite):
                 self.facing = random.choice(["up", "down", "left", "right"])
 
     def movement(self):
-        # Add a check before moving
         if self.facing == "left":
-            # Test move first
             self.x_change = -ENEMY_SPEED
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
             if hits or self.movement_loop <= -self.max_travel:
-                # Change direction before getting stuck
                 self.facing = random.choice(["right", "up", "down"])
                 self.movement_loop = 0
             else:
@@ -553,11 +538,9 @@ class Sheep(pygame.sprite.Sprite):
         elif self.facing == "down":
             anim_list = self.down_animations
 
-        # Velg bilde basert på animation_loop
         index = int(self.animation_loop) % len(anim_list)
         self.image = anim_list[index]
 
-        # Øk loop og resett ved grense
         self.animation_loop += 0.1
         if self.animation_loop >= 4:
             self.animation_loop = 1
@@ -608,7 +591,7 @@ class Button:
         self.text = text
         self.font = pygame.font.Font("Iceberg-Regular.ttf", font_size)
         self.text_color = WHITE
-        self.hover_text_color = GRAY  # Fargen når musen er over knappen
+        self.hover_text_color = GRAY
         self.image = pygame.Surface((width, height))
         self.image.fill(self.color)
 
@@ -618,7 +601,7 @@ class Button:
         """Oppdaterer knappeteksten med riktig farge"""
         text_surface = self.font.render(self.text, True, color)
         text_rect = text_surface.get_rect(center=self.rect.center)
-        self.image.fill(self.color)  # Tegner bakgrunnsfargen på nytt
+        self.image.fill(self.color)
         self.image.blit(text_surface, (self.rect.width // 2 - text_rect.width // 2, 
                                        self.rect.height // 2 - text_rect.height // 2))
 
